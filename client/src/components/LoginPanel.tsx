@@ -7,7 +7,7 @@ interface LoginPanelProps {
 const LoginPanel = ({ onClose }: LoginPanelProps) => {
   const handleLogin = (provider: string) => {
     // Use the pre-login endpoint which clears any existing session first
-    window.location.href = `http://localhost:5000/api/auth/login/${provider}`;
+    window.location.href = `${import.meta.env.VITE_SERVER_URL}/api/auth/login/${provider}`;
   };
 
   return (

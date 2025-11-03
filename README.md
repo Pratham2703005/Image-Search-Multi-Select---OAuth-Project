@@ -98,17 +98,17 @@ UNSPLASH_ACCESS_KEY=your_unsplash_access_key
 # Google OAuth
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
-GOOGLE_CALLBACK_URL=
+GOOGLE_CALLBACK_URL=http://localhost:5000/api/auth/google/callback
 
 # Facebook OAuth
 FACEBOOK_APP_ID=your_facebook_app_id
 FACEBOOK_APP_SECRET=your_facebook_app_secret
-FACEBOOK_CALLBACK_URL=
+FACEBOOK_CALLBACK_URL=http://localhost:5000/api/auth/facebook/callback
 
 # GitHub OAuth
 GITHUB_CLIENT_ID=your_github_client_id
 GITHUB_CLIENT_SECRET=your_github_client_secret
-GITHUB_CALLBACK_URL=
+GITHUB_CALLBACK_URL=http://localhost:5000/api/auth/github/callback
 
 ```
 
@@ -127,6 +127,11 @@ Open a new terminal:
 ```bash
 cd client
 npm install
+
+```
+Create a `.env` file in the `client` directory:
+```env
+VITE_SERVER_URL=http://localhost:5000
 ```
 
 Start the React app:

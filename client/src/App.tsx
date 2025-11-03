@@ -46,8 +46,7 @@ function App() {
 
   const checkAuth = async () => {
     try {
-      
-      const response = await axios.get('http://localhost:5000/api/auth/user', {
+      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/auth/user`, {
         withCredentials: true
       });
       if (response.data?.user) {
@@ -72,7 +71,7 @@ function App() {
     setSelectedImages(new Set());
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/search',
+        `${import.meta.env.VITE_SERVER_URL}/api/search`,
         { term },
         { withCredentials: true }
       );
@@ -88,7 +87,7 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      await axios.get('http://localhost:5000/api/auth/logout', {
+      await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/auth/logout`, {
         withCredentials: true
       });
       setUser(null);

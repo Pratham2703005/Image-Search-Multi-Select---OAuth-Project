@@ -3,7 +3,7 @@ import '../styles/Login.css';
 
 const Login: React.FC = () => {
   const handleLogin = (provider: string) => {
-    window.location.href = `http://localhost:5000/api/auth/${provider}`;
+    window.location.href = `${import.meta.env.VITE_SERVER_URL}/api/auth/${provider}`;
   };
 
   return (

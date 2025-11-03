@@ -17,7 +17,7 @@ const TopSearches: React.FC = () => {
 
   const fetchTopSearches = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/top-searches');
+      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/top-searches`);
       setTopSearches(response.data);
     } catch (error) {
       console.error('Error fetching top searches:', error);

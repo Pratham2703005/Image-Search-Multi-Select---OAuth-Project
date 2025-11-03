@@ -36,7 +36,7 @@ const SearchHistory: React.FC<SearchHistoryProps> = ({ refresh, user }) => {
 
   const fetchHistory = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/history', {
+      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/history`, {
         withCredentials: true
       });
       setHistory(response.data);

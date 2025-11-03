@@ -1,0 +1,157 @@
+import express from "express";
+import passport from "passport";
+
+const router = express.Router();
+
+// Middleware to check if user is authenticated
+export const isAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: "Unauthorized" });
+};
+
+// Pre-login: clear any existing session and then start provider auth
+router.get('/login/:provider', (req, res) => {
+  const { provider } = req.params;
+  const allowed = ['google', 'facebook', 'github'];
+  if (!allowed.includes(provider)) {
+    return res.status(400).send('Invalid provider');
+  }
+
+  const startAuth = () => res.redirect(`/api/auth/${provider}`);
+
+  // Try to logout and destroy any existing session so OAuth starts fresh
+  if (typeof req.logout === 'function') {
+    try {
+      req.logout(() => {
+        if (req.session) {
+          req.session.destroy(() => {
+            res.clearCookie('connect.sid');
+            startAuth();
+          });
+        } else {
+          startAuth();
+        }
+      });
+    } catch (e) {
+      // If logout throws for any reason, still attempt to destroy session
+      if (req.session) {
+        req.session.destroy(() => {
+          res.clearCookie('connect.sid');
+          startAuth();
+        });
+      } else {
+        startAuth();
+      }
+    }
+  } else {
+    // No logout function available, just destroy session if present
+    if (req.session) {
+      req.session.destroy(() => {
+        res.clearCookie('connect.sid');
+        startAuth();
+      });
+    } else {
+      startAuth();
+    }
+  }
+});
+
+// Google Auth
+router.get(
+  "/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+router.get(
+  "/google/callback",
+  passport.authenticate("google", { 
+    failureRedirect: process.env.CLIENT_URL,
+    failureMessage: true 
+  }),
+  (req, res) => {
+    res.redirect(process.env.CLIENT_URL);
+  }
+);
+
+// Facebook Auth
+router.get(
+  "/facebook",
+  passport.authenticate("facebook", { scope: ["email"] })
+);
+
+router.get(
+  "/facebook/callback",
+  passport.authenticate("facebook", { 
+    failureRedirect: process.env.CLIENT_URL,
+    failureMessage: true 
+  }),
+  (req, res) => {
+    // Successful authentication
+    res.redirect(process.env.CLIENT_URL);
+  }
+);
+
+// GitHub Auth
+router.get(
+  "/github",
+  passport.authenticate("github", { scope: ["user:email"] })
+);
+
+router.get(
+  "/github/callback",
+  passport.authenticate("github", { 
+    failureRedirect: process.env.CLIENT_URL,
+    failureMessage: true 
+  }),
+  (req, res) => {
+    // Successful authentication
+    res.redirect(process.env.CLIENT_URL);
+  }
+);
+
+// Get current user
+router.get("/user", (req, res) => {
+  console.log("Session data:", req.isAuthenticated(), req.user);
+  if (req.isAuthenticated() && req.user) {
+    res.json({
+      user: {
+        id: req.user._id,
+        displayName: req.user.displayName,
+        email: req.user.email,
+        photo: req.user.photo,
+        provider: req.user.provider
+      }
+    });
+  } else {
+    // Clear any leftover session
+    if (req.session) {
+      req.session.destroy(() => {
+        res.clearCookie('connect.sid');
+        res.status(401).json({ message: "Not authenticated" });
+      });
+    } else {
+      res.clearCookie('connect.sid');
+      res.status(401).json({ message: "Not authenticated" });
+    }
+  }
+});
+
+// Logout
+router.get("/logout", (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      return res.status(500).json({ message: "Error logging out" });
+    }
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).json({ message: "Error destroying session" });
+      }
+      res.clearCookie('connect.sid');
+      res.json({ message: "Logged out successfully" });
+    });
+  });
+});
+
+export default router;

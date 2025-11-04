@@ -21,11 +21,16 @@ const LoginPanel = ({ onClose }: LoginPanelProps) => {
     // Listen for message from popup
     const handleMessage = (event: MessageEvent) => {
       if (event.origin !== import.meta.env.VITE_SERVER_URL) return;
+      
       if (event.data.type === 'oauth-success') {
         window.removeEventListener('message', handleMessage);
         onClose();
         // Reload to update user state
         window.location.reload();
+      } else if (event.data.type === 'oauth-error') {
+        window.removeEventListener('message', handleMessage);
+        console.error('OAuth error:', event.data.error);
+        alert(`Login failed: ${event.data.error || 'Unknown error'}`);
       }
     };
 

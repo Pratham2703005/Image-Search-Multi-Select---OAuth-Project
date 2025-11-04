@@ -66,30 +66,70 @@ router.get(
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", { 
-    failureRedirect: process.env.CLIENT_URL,
-    failureMessage: true 
-  }),
-  (req, res) => {
-    // Explicitly save session before redirect
-    req.session.save((err) => {
+  (req, res, next) => {
+    passport.authenticate("google", (err, user, info) => {
       if (err) {
-        console.error('Session save error:', err);
-        return res.send('<script>window.close()</script>');
+        console.error('Google OAuth error:', err);
+        return res.send(`
+          <html>
+            <body>
+              <script>
+                window.opener.postMessage({ type: 'oauth-error', error: 'Authentication failed' }, '${process.env.CLIENT_URL}');
+                window.close();
+              </script>
+            </body>
+          </html>
+        `);
       }
-      console.log('Session saved successfully for user:', req.user.displayName);
-      // Send HTML that closes popup and notifies parent window
-      res.send(`
-        <html>
-          <body>
-            <script>
-              window.opener.postMessage({ type: 'oauth-success' }, '${process.env.CLIENT_URL}');
-              window.close();
-            </script>
-          </body>
-        </html>
-      `);
-    });
+      
+      if (!user) {
+        console.error('Google OAuth: No user returned');
+        return res.send(`
+          <html>
+            <body>
+              <script>
+                window.opener.postMessage({ type: 'oauth-error', error: 'No user found' }, '${process.env.CLIENT_URL}');
+                window.close();
+              </script>
+            </body>
+          </html>
+        `);
+      }
+
+      req.logIn(user, (err) => {
+        if (err) {
+          console.error('Login error:', err);
+          return res.send(`
+            <html>
+              <body>
+                <script>
+                  window.opener.postMessage({ type: 'oauth-error', error: 'Login failed' }, '${process.env.CLIENT_URL}');
+                  window.close();
+                </script>
+              </body>
+            </html>
+          `);
+        }
+
+        req.session.save((err) => {
+          if (err) {
+            console.error('Session save error:', err);
+            return res.send('<script>window.close()</script>');
+          }
+          console.log('Session saved successfully for user:', user.displayName);
+          res.send(`
+            <html>
+              <body>
+                <script>
+                  window.opener.postMessage({ type: 'oauth-success' }, '${process.env.CLIENT_URL}');
+                  window.close();
+                </script>
+              </body>
+            </html>
+          `);
+        });
+      });
+    })(req, res, next);
   }
 );
 
@@ -101,30 +141,70 @@ router.get(
 
 router.get(
   "/facebook/callback",
-  passport.authenticate("facebook", { 
-    failureRedirect: process.env.CLIENT_URL,
-    failureMessage: true 
-  }),
-  (req, res) => {
-    // Explicitly save session before redirect
-    req.session.save((err) => {
+  (req, res, next) => {
+    passport.authenticate("facebook", (err, user, info) => {
       if (err) {
-        console.error('Session save error:', err);
-        return res.send('<script>window.close()</script>');
+        console.error('Facebook OAuth error:', err);
+        return res.send(`
+          <html>
+            <body>
+              <script>
+                window.opener.postMessage({ type: 'oauth-error', error: 'Authentication failed' }, '${process.env.CLIENT_URL}');
+                window.close();
+              </script>
+            </body>
+          </html>
+        `);
       }
-      console.log('Session saved successfully for user:', req.user.displayName);
-      // Send HTML that closes popup and notifies parent window
-      res.send(`
-        <html>
-          <body>
-            <script>
-              window.opener.postMessage({ type: 'oauth-success' }, '${process.env.CLIENT_URL}');
-              window.close();
-            </script>
-          </body>
-        </html>
-      `);
-    });
+      
+      if (!user) {
+        console.error('Facebook OAuth: No user returned');
+        return res.send(`
+          <html>
+            <body>
+              <script>
+                window.opener.postMessage({ type: 'oauth-error', error: 'No user found' }, '${process.env.CLIENT_URL}');
+                window.close();
+              </script>
+            </body>
+          </html>
+        `);
+      }
+
+      req.logIn(user, (err) => {
+        if (err) {
+          console.error('Login error:', err);
+          return res.send(`
+            <html>
+              <body>
+                <script>
+                  window.opener.postMessage({ type: 'oauth-error', error: 'Login failed' }, '${process.env.CLIENT_URL}');
+                  window.close();
+                </script>
+              </body>
+            </html>
+          `);
+        }
+
+        req.session.save((err) => {
+          if (err) {
+            console.error('Session save error:', err);
+            return res.send('<script>window.close()</script>');
+          }
+          console.log('Session saved successfully for user:', user.displayName);
+          res.send(`
+            <html>
+              <body>
+                <script>
+                  window.opener.postMessage({ type: 'oauth-success' }, '${process.env.CLIENT_URL}');
+                  window.close();
+                </script>
+              </body>
+            </html>
+          `);
+        });
+      });
+    })(req, res, next);
   }
 );
 
@@ -136,30 +216,70 @@ router.get(
 
 router.get(
   "/github/callback",
-  passport.authenticate("github", { 
-    failureRedirect: process.env.CLIENT_URL,
-    failureMessage: true 
-  }),
-  (req, res) => {
-    // Explicitly save session before redirect
-    req.session.save((err) => {
+  (req, res, next) => {
+    passport.authenticate("github", (err, user, info) => {
       if (err) {
-        console.error('Session save error:', err);
-        return res.send('<script>window.close()</script>');
+        console.error('GitHub OAuth error:', err);
+        return res.send(`
+          <html>
+            <body>
+              <script>
+                window.opener.postMessage({ type: 'oauth-error', error: 'Authentication failed' }, '${process.env.CLIENT_URL}');
+                window.close();
+              </script>
+            </body>
+          </html>
+        `);
       }
-      console.log('Session saved successfully for user:', req.user.displayName);
-      // Send HTML that closes popup and notifies parent window
-      res.send(`
-        <html>
-          <body>
-            <script>
-              window.opener.postMessage({ type: 'oauth-success' }, '${process.env.CLIENT_URL}');
-              window.close();
-            </script>
-          </body>
-        </html>
-      `);
-    });
+      
+      if (!user) {
+        console.error('GitHub OAuth: No user returned');
+        return res.send(`
+          <html>
+            <body>
+              <script>
+                window.opener.postMessage({ type: 'oauth-error', error: 'No user found' }, '${process.env.CLIENT_URL}');
+                window.close();
+              </script>
+            </body>
+          </html>
+        `);
+      }
+
+      req.logIn(user, (err) => {
+        if (err) {
+          console.error('Login error:', err);
+          return res.send(`
+            <html>
+              <body>
+                <script>
+                  window.opener.postMessage({ type: 'oauth-error', error: 'Login failed' }, '${process.env.CLIENT_URL}');
+                  window.close();
+                </script>
+              </body>
+            </html>
+          `);
+        }
+
+        req.session.save((err) => {
+          if (err) {
+            console.error('Session save error:', err);
+            return res.send('<script>window.close()</script>');
+          }
+          console.log('Session saved successfully for user:', user.displayName);
+          res.send(`
+            <html>
+              <body>
+                <script>
+                  window.opener.postMessage({ type: 'oauth-success' }, '${process.env.CLIENT_URL}');
+                  window.close();
+                </script>
+              </body>
+            </html>
+          `);
+        });
+      });
+    })(req, res, next);
   }
 );
 

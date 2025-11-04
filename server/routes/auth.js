@@ -60,10 +60,15 @@ router.get('/login/:provider', (req, res) => {
 
 // Google Auth
 router.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  "/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: `${process.env.CLIENT_URL}/login?error=auth_failed`,
+  }),
+  (req, res) => {
+    // Successful authentication, redirect to dashboard
+    res.redirect(`${process.env.CLIENT_URL}/dashboard`);
+  }
 );
-
 router.get(
   "/google/callback",
   (req, res, next) => {

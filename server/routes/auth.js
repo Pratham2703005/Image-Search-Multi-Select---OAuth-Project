@@ -78,7 +78,8 @@ router.get(
         return res.redirect(process.env.CLIENT_URL);
       }
       console.log('Session saved successfully:', req.sessionID);
-      res.redirect(process.env.CLIENT_URL);
+      // Redirect to success page that will handle the client-side redirect
+      res.redirect(`${process.env.CLIENT_URL}/auth/success`);
     });
   }
 );
@@ -103,7 +104,8 @@ router.get(
         return res.redirect(process.env.CLIENT_URL);
       }
       console.log('Session saved successfully:', req.sessionID);
-      res.redirect(process.env.CLIENT_URL);
+      // Redirect to success page that will handle the client-side redirect
+      res.redirect(`${process.env.CLIENT_URL}/auth/success`);
     });
   }
 );
@@ -128,7 +130,8 @@ router.get(
         return res.redirect(process.env.CLIENT_URL);
       }
       console.log('Session saved successfully:', req.sessionID);
-      res.redirect(process.env.CLIENT_URL);
+      // Redirect to success page that will handle the client-side redirect
+      res.redirect(`${process.env.CLIENT_URL}/auth/success`);
     });
   }
 );

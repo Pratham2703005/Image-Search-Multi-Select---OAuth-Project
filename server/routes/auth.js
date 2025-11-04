@@ -74,7 +74,11 @@ router.get(
           <html>
             <body>
               <script>
-                window.opener.postMessage({ type: 'oauth-error', error: 'Authentication failed' }, '${process.env.CLIENT_URL}');
+                if (window.opener) {
+                  window.opener.postMessage({ type: 'oauth-error', error: 'Authentication failed' }, '${process.env.CLIENT_URL}');
+                } else {
+                  localStorage.setItem('oauth-result', JSON.stringify({ type: 'oauth-error', error: 'Authentication failed' }));
+                }
                 window.close();
               </script>
             </body>
@@ -88,7 +92,11 @@ router.get(
           <html>
             <body>
               <script>
-                window.opener.postMessage({ type: 'oauth-error', error: 'No user found' }, '${process.env.CLIENT_URL}');
+                if (window.opener) {
+                  window.opener.postMessage({ type: 'oauth-error', error: 'No user found' }, '${process.env.CLIENT_URL}');
+                } else {
+                  localStorage.setItem('oauth-result', JSON.stringify({ type: 'oauth-error', error: 'No user found' }));
+                }
                 window.close();
               </script>
             </body>
@@ -103,7 +111,11 @@ router.get(
             <html>
               <body>
                 <script>
-                  window.opener.postMessage({ type: 'oauth-error', error: 'Login failed' }, '${process.env.CLIENT_URL}');
+                  if (window.opener) {
+                    window.opener.postMessage({ type: 'oauth-error', error: 'Login failed' }, '${process.env.CLIENT_URL}');
+                  } else {
+                    localStorage.setItem('oauth-result', JSON.stringify({ type: 'oauth-error', error: 'Login failed' }));
+                  }
                   window.close();
                 </script>
               </body>
@@ -121,7 +133,11 @@ router.get(
             <html>
               <body>
                 <script>
-                  window.opener.postMessage({ type: 'oauth-success' }, '${process.env.CLIENT_URL}');
+                  if (window.opener) {
+                    window.opener.postMessage({ type: 'oauth-success' }, '${process.env.CLIENT_URL}');
+                  } else {
+                    localStorage.setItem('oauth-result', JSON.stringify({ type: 'oauth-success' }));
+                  }
                   window.close();
                 </script>
               </body>
@@ -149,7 +165,11 @@ router.get(
           <html>
             <body>
               <script>
-                window.opener.postMessage({ type: 'oauth-error', error: 'Authentication failed' }, '${process.env.CLIENT_URL}');
+                if (window.opener) {
+                  window.opener.postMessage({ type: 'oauth-error', error: 'Authentication failed' }, '${process.env.CLIENT_URL}');
+                } else {
+                  localStorage.setItem('oauth-result', JSON.stringify({ type: 'oauth-error', error: 'Authentication failed' }));
+                }
                 window.close();
               </script>
             </body>
@@ -163,7 +183,11 @@ router.get(
           <html>
             <body>
               <script>
-                window.opener.postMessage({ type: 'oauth-error', error: 'No user found' }, '${process.env.CLIENT_URL}');
+                if (window.opener) {
+                  window.opener.postMessage({ type: 'oauth-error', error: 'No user found' }, '${process.env.CLIENT_URL}');
+                } else {
+                  localStorage.setItem('oauth-result', JSON.stringify({ type: 'oauth-error', error: 'No user found' }));
+                }
                 window.close();
               </script>
             </body>
@@ -178,7 +202,11 @@ router.get(
             <html>
               <body>
                 <script>
-                  window.opener.postMessage({ type: 'oauth-error', error: 'Login failed' }, '${process.env.CLIENT_URL}');
+                  if (window.opener) {
+                    window.opener.postMessage({ type: 'oauth-error', error: 'Login failed' }, '${process.env.CLIENT_URL}');
+                  } else {
+                    localStorage.setItem('oauth-result', JSON.stringify({ type: 'oauth-error', error: 'Login failed' }));
+                  }
                   window.close();
                 </script>
               </body>
@@ -196,7 +224,11 @@ router.get(
             <html>
               <body>
                 <script>
-                  window.opener.postMessage({ type: 'oauth-success' }, '${process.env.CLIENT_URL}');
+                  if (window.opener) {
+                    window.opener.postMessage({ type: 'oauth-success' }, '${process.env.CLIENT_URL}');
+                  } else {
+                    localStorage.setItem('oauth-result', JSON.stringify({ type: 'oauth-success' }));
+                  }
                   window.close();
                 </script>
               </body>
@@ -224,7 +256,11 @@ router.get(
           <html>
             <body>
               <script>
-                window.opener.postMessage({ type: 'oauth-error', error: 'Authentication failed' }, '${process.env.CLIENT_URL}');
+                if (window.opener) {
+                  window.opener.postMessage({ type: 'oauth-error', error: 'Authentication failed' }, '${process.env.CLIENT_URL}');
+                } else {
+                  localStorage.setItem('oauth-result', JSON.stringify({ type: 'oauth-error', error: 'Authentication failed' }));
+                }
                 window.close();
               </script>
             </body>
@@ -238,7 +274,11 @@ router.get(
           <html>
             <body>
               <script>
-                window.opener.postMessage({ type: 'oauth-error', error: 'No user found' }, '${process.env.CLIENT_URL}');
+                if (window.opener) {
+                  window.opener.postMessage({ type: 'oauth-error', error: 'No user found' }, '${process.env.CLIENT_URL}');
+                } else {
+                  localStorage.setItem('oauth-result', JSON.stringify({ type: 'oauth-error', error: 'No user found' }));
+                }
                 window.close();
               </script>
             </body>
@@ -253,7 +293,11 @@ router.get(
             <html>
               <body>
                 <script>
-                  window.opener.postMessage({ type: 'oauth-error', error: 'Login failed' }, '${process.env.CLIENT_URL}');
+                  if (window.opener) {
+                    window.opener.postMessage({ type: 'oauth-error', error: 'Login failed' }, '${process.env.CLIENT_URL}');
+                  } else {
+                    localStorage.setItem('oauth-result', JSON.stringify({ type: 'oauth-error', error: 'Login failed' }));
+                  }
                   window.close();
                 </script>
               </body>
@@ -271,7 +315,11 @@ router.get(
             <html>
               <body>
                 <script>
-                  window.opener.postMessage({ type: 'oauth-success' }, '${process.env.CLIENT_URL}');
+                  if (window.opener) {
+                    window.opener.postMessage({ type: 'oauth-success' }, '${process.env.CLIENT_URL}');
+                  } else {
+                    localStorage.setItem('oauth-result', JSON.stringify({ type: 'oauth-success' }));
+                  }
                   window.close();
                 </script>
               </body>

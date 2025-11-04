@@ -6,6 +6,9 @@ interface LoginPanelProps {
 
 const LoginPanel = ({ onClose }: LoginPanelProps) => {
   const handleLogin = (provider: string) => {
+    // Clear any previous OAuth result
+    localStorage.removeItem('oauth-result');
+    
     // Open OAuth in popup window
     const width = 600;
     const height = 700;
@@ -18,31 +21,75 @@ const LoginPanel = ({ onClose }: LoginPanelProps) => {
       `width=${width},height=${height},left=${left},top=${top}`
     );
 
-    // Listen for message from popup
+    // Listen for message from popup (postMessage method)
     const handleMessage = (event: MessageEvent) => {
       if (event.origin !== import.meta.env.VITE_SERVER_URL) return;
       
       if (event.data.type === 'oauth-success') {
-        window.removeEventListener('message', handleMessage);
+        cleanup();
         onClose();
-        // Reload to update user state
         window.location.reload();
       } else if (event.data.type === 'oauth-error') {
-        window.removeEventListener('message', handleMessage);
+        cleanup();
         console.error('OAuth error:', event.data.error);
         alert(`Login failed: ${event.data.error || 'Unknown error'}`);
       }
     };
 
+    // Listen for localStorage changes (fallback when window.opener is null)
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === 'oauth-result' && event.newValue) {
+        try {
+          const result = JSON.parse(event.newValue);
+          localStorage.removeItem('oauth-result');
+          
+          if (result.type === 'oauth-success') {
+            cleanup();
+            onClose();
+            window.location.reload();
+          } else if (result.type === 'oauth-error') {
+            cleanup();
+            console.error('OAuth error:', result.error);
+            alert(`Login failed: ${result.error || 'Unknown error'}`);
+          }
+        } catch (err) {
+          console.error('Failed to parse OAuth result:', err);
+        }
+      }
+    };
+
+    // Cleanup function
+    const cleanup = () => {
+      window.removeEventListener('message', handleMessage);
+      window.removeEventListener('storage', handleStorage);
+      clearInterval(checkPopup);
+    };
+
     window.addEventListener('message', handleMessage);
+    window.addEventListener('storage', handleStorage);
 
     // Check if popup was closed manually
     const checkPopup = setInterval(() => {
       if (popup?.closed) {
-        clearInterval(checkPopup);
-        window.removeEventListener('message', handleMessage);
+        // Check localStorage one last time
+        const result = localStorage.getItem('oauth-result');
+        if (result) {
+          try {
+            const data = JSON.parse(result);
+            localStorage.removeItem('oauth-result');
+            if (data.type === 'oauth-success') {
+              cleanup();
+              onClose();
+              window.location.reload();
+            }
+          } catch (err) {
+            console.error('Failed to parse OAuth result:', err);
+          }
+        } else {
+          cleanup();
+        }
       }
-    }, 1000);
+    }, 500);
   };
 
   return (

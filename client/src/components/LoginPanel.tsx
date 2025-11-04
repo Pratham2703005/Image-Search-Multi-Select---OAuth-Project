@@ -6,8 +6,38 @@ interface LoginPanelProps {
 
 const LoginPanel = ({ onClose }: LoginPanelProps) => {
   const handleLogin = (provider: string) => {
-    // Use the pre-login endpoint which clears any existing session first
-    window.location.href = `${import.meta.env.VITE_SERVER_URL}/api/auth/login/${provider}`;
+    // Open OAuth in popup window
+    const width = 600;
+    const height = 700;
+    const left = window.screenX + (window.outerWidth - width) / 2;
+    const top = window.screenY + (window.outerHeight - height) / 2;
+    
+    const popup = window.open(
+      `${import.meta.env.VITE_SERVER_URL}/api/auth/login/${provider}`,
+      'oauth-popup',
+      `width=${width},height=${height},left=${left},top=${top}`
+    );
+
+    // Listen for message from popup
+    const handleMessage = (event: MessageEvent) => {
+      if (event.origin !== import.meta.env.VITE_SERVER_URL) return;
+      if (event.data.type === 'oauth-success') {
+        window.removeEventListener('message', handleMessage);
+        onClose();
+        // Reload to update user state
+        window.location.reload();
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    // Check if popup was closed manually
+    const checkPopup = setInterval(() => {
+      if (popup?.closed) {
+        clearInterval(checkPopup);
+        window.removeEventListener('message', handleMessage);
+      }
+    }, 1000);
   };
 
   return (

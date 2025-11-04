@@ -75,11 +75,20 @@ router.get(
     req.session.save((err) => {
       if (err) {
         console.error('Session save error:', err);
-        return res.redirect(process.env.CLIENT_URL);
+        return res.send('<script>window.close()</script>');
       }
-      console.log('Session saved successfully:', req.sessionID);
-      // Redirect to success page that will handle the client-side redirect
-      res.redirect(`${process.env.CLIENT_URL}/auth/success`);
+      console.log('Session saved successfully for user:', req.user.displayName);
+      // Send HTML that closes popup and notifies parent window
+      res.send(`
+        <html>
+          <body>
+            <script>
+              window.opener.postMessage({ type: 'oauth-success' }, '${process.env.CLIENT_URL}');
+              window.close();
+            </script>
+          </body>
+        </html>
+      `);
     });
   }
 );
@@ -101,11 +110,20 @@ router.get(
     req.session.save((err) => {
       if (err) {
         console.error('Session save error:', err);
-        return res.redirect(process.env.CLIENT_URL);
+        return res.send('<script>window.close()</script>');
       }
-      console.log('Session saved successfully:', req.sessionID);
-      // Redirect to success page that will handle the client-side redirect
-      res.redirect(`${process.env.CLIENT_URL}/auth/success`);
+      console.log('Session saved successfully for user:', req.user.displayName);
+      // Send HTML that closes popup and notifies parent window
+      res.send(`
+        <html>
+          <body>
+            <script>
+              window.opener.postMessage({ type: 'oauth-success' }, '${process.env.CLIENT_URL}');
+              window.close();
+            </script>
+          </body>
+        </html>
+      `);
     });
   }
 );
@@ -127,11 +145,20 @@ router.get(
     req.session.save((err) => {
       if (err) {
         console.error('Session save error:', err);
-        return res.redirect(process.env.CLIENT_URL);
+        return res.send('<script>window.close()</script>');
       }
-      console.log('Session saved successfully:', req.sessionID);
-      // Redirect to success page that will handle the client-side redirect
-      res.redirect(`${process.env.CLIENT_URL}/auth/success`);
+      console.log('Session saved successfully for user:', req.user.displayName);
+      // Send HTML that closes popup and notifies parent window
+      res.send(`
+        <html>
+          <body>
+            <script>
+              window.opener.postMessage({ type: 'oauth-success' }, '${process.env.CLIENT_URL}');
+              window.close();
+            </script>
+          </body>
+        </html>
+      `);
     });
   }
 );

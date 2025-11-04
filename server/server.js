@@ -12,6 +12,9 @@ import historyRoutes from "./routes/history.js";
 dotenv.config();
 const app = express();
 
+// Trust proxy - Required for secure cookies behind reverse proxy (Render)
+app.set('trust proxy', 1);
+
 // CORS configuration
 app.use(cors({ 
   origin: process.env.CLIENT_URL?.replace(/\/$/, '') || "http://localhost:5173", 

@@ -71,7 +71,15 @@ router.get(
     failureMessage: true 
   }),
   (req, res) => {
-    res.redirect(process.env.CLIENT_URL);
+    // Explicitly save session before redirect
+    req.session.save((err) => {
+      if (err) {
+        console.error('Session save error:', err);
+        return res.redirect(process.env.CLIENT_URL);
+      }
+      console.log('Session saved successfully:', req.sessionID);
+      res.redirect(process.env.CLIENT_URL);
+    });
   }
 );
 
@@ -88,8 +96,15 @@ router.get(
     failureMessage: true 
   }),
   (req, res) => {
-    // Successful authentication
-    res.redirect(process.env.CLIENT_URL);
+    // Explicitly save session before redirect
+    req.session.save((err) => {
+      if (err) {
+        console.error('Session save error:', err);
+        return res.redirect(process.env.CLIENT_URL);
+      }
+      console.log('Session saved successfully:', req.sessionID);
+      res.redirect(process.env.CLIENT_URL);
+    });
   }
 );
 
@@ -106,8 +121,15 @@ router.get(
     failureMessage: true 
   }),
   (req, res) => {
-    // Successful authentication
-    res.redirect(process.env.CLIENT_URL);
+    // Explicitly save session before redirect
+    req.session.save((err) => {
+      if (err) {
+        console.error('Session save error:', err);
+        return res.redirect(process.env.CLIENT_URL);
+      }
+      console.log('Session saved successfully:', req.sessionID);
+      res.redirect(process.env.CLIENT_URL);
+    });
   }
 );
 
@@ -125,16 +147,8 @@ router.get("/user", (req, res) => {
       }
     });
   } else {
-    // Clear any leftover session
-    if (req.session) {
-      req.session.destroy(() => {
-        res.clearCookie('connect.sid');
-        res.status(401).json({ message: "Not authenticated" });
-      });
-    } else {
-      res.clearCookie('connect.sid');
-      res.status(401).json({ message: "Not authenticated" });
-    }
+    // Don't destroy session - just return 401
+    res.status(401).json({ message: "Not authenticated" });
   }
 });
 
